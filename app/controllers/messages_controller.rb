@@ -1,5 +1,5 @@
 class MessagesController < ApplicationController
-  before_action :set_message, only: %i[ show edit update destroy ]
+  before_action :set_message, only: %i[ send_email show edit update destroy ]
 
   # GET /messages
   def index
@@ -15,8 +15,10 @@ class MessagesController < ApplicationController
     @message = Message.new
   end
 
-  # GET /messages/1/edit
-  def edit
+  def send_email
+    MessageMailer.with(message: @message).send_message.deliver_now
+
+    redirect_back fallback_location: messages_url, notice: 'Message was send.'
   end
 
   # POST /messages
@@ -24,18 +26,10 @@ class MessagesController < ApplicationController
     @message = Message.new(message_params)
 
     if @message.save
+      MessageMailer.with(message: @message).send_message.deliver_now
       redirect_to @message, notice: "Message was successfully created."
     else
       render :new, status: :unprocessable_entity
-    end
-  end
-
-  # PATCH/PUT /messages/1
-  def update
-    if @message.update(message_params)
-      redirect_to @message, notice: "Message was successfully updated."
-    else
-      render :edit, status: :unprocessable_entity
     end
   end
 
