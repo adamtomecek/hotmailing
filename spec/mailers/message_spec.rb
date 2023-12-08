@@ -27,5 +27,31 @@ RSpec.describe MessageMailer, type: :mailer do
     it 'renders the body' do
       expect(mail.body.encoded).to match('my content')
     end
+
+    it 'includes attachments' do
+      file_path = Rails.root.join('spec/fixtures/sample.pdf')
+      file = fixture_file_upload(file_path, 'application/pdf')
+
+      # simulate manual attachment
+      message.attachments.attach(file)
+      message.save
+
+      expect(mail.attachments.count).to eq 1
+      expect(mail.attachments.first.filename).to eq 'sample.pdf'
+    end
+
+    it 'includes inline attachments' do
+      file_path = Rails.root.join('spec/fixtures/sample.pdf')
+      file = fixture_file_upload(file_path, 'application/pdf')
+
+      # simulate inline attachment
+      blob = ActiveStorage::Blob.create_and_upload!(filename: 'sample.pdf', io: file)
+      message.content.embeds_blobs = [blob]
+
+      message.save
+
+      expect(mail.attachments.count).to eq 1
+      expect(mail.attachments.first.filename).to eq 'sample.pdf'
+    end
   end
 end

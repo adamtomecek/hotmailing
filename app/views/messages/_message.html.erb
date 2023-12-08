@@ -29,6 +29,16 @@
     <%= message.content %>
   </p>
 
+  <p class="my-5">
+    <% message.attachments.each do |attachment| %>
+      <%= link_to rails_blob_url(attachment.blob), download: true, class: "bg-gray-100 inline-flex py-1 px-1 rounded-lg items-center hover:bg-gray-200 border" do %>
+        <span class="leading-none">
+          <span class="title-font font-medium text-xs"><%= attachment.blob.filename %></span>
+        </span>
+      <% end %>
+    <% end %>
+  </p>
+
   <% if action_name != "show" %>
     <%= link_to "Show this message", message, class: "rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
     <%= button_to "Send again", send_email_message_path(message), method: :post, class: "rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
