@@ -8,6 +8,8 @@ class InboxMailbox < ApplicationMailbox
       subject: mail.subject,
       attachments: parsed_attachments.map { |attachment| attachment[:blob] },
       content: process_email_content,
+      message_id: mail.message_id,
+      reply_to: Message.find_by(message_id: mail.references),
     )
   end
 

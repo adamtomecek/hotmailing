@@ -26,7 +26,8 @@ class MessagesController < ApplicationController
     @message = Message.new(message_params)
 
     if @message.save
-      MessageMailer.with(message: @message).send_message.deliver_now
+      email = MessageMailer.with(message: @message).send_message.deliver_now
+      @message.update!(message_id: email.message_id)
       redirect_to @message, notice: "Message was successfully created."
     else
       render :new, status: :unprocessable_entity

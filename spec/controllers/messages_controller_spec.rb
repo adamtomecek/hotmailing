@@ -10,6 +10,15 @@ RSpec.describe MessagesController, type: :controller do
       }.to change { Message.count }.by(1)
     end
 
+    it 'saves message_id' do
+      message_params = attributes_for(:message)
+
+      post :create, params: { message: message_params }
+
+      message = Message.last
+      expect(message.message_id).not_to be_nil
+    end
+
     it 'sends an e-mail' do
       message_params = attributes_for(:message)
 

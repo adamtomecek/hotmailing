@@ -68,6 +68,32 @@ RSpec.describe InboxMailbox, type: :mailbox do
 
     expect(message.content.to_plain_text).to eq 'This is HTML'
   end
+
+  it 'tracks replies' do
+    mail = Mail.new(
+      from: 'from@example.com',
+      to: 'test@example.com',
+      subject: 'Test email',
+      body: 'Test body',
+    )
+
+    mail_processed = process(mail)
+
+    reply = Mail.new(
+      from: 'test@example.com',
+      to: 'from@example.com',
+      subject: 'Re: Test email',
+      body: 'Test reply',
+      references: mail_processed.message_id,
+    )
+
+    process(reply)
+
+    expect(Message.count).to eq 2
+    expect(Message.first.subject).to eq 'Test email'
+    expect(Message.last.subject).to eq 'Re: Test email'
+    expect(Message.last.reply_to_id).to eq Message.first.id
+  end
 end
 
 
