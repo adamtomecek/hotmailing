@@ -38,6 +38,7 @@
       <% end %>
     <% end %>
   </p>
+  <%= link_to 'Reply', new_message_path(reply_to_id: message.id), class: "rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
 
   <% if action_name != "show" %>
     <%= link_to "Show this message", message, class: "rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>

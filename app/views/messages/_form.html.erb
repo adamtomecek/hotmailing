@@ -1,4 +1,6 @@
 <%= form_with(model: message, class: "contents") do |form| %>
+  <%= form.hidden_field :reply_to_id %>
+
   <% if message.errors.any? %>
     <div id="error_explanation" class="bg-red-50 text-red-500 px-3 py-2 font-medium rounded-lg mt-3">
       <h2><%= pluralize(message.errors.count, "error") %> prohibited this message from being saved:</h2>

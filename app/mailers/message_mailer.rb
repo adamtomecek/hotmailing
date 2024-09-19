@@ -18,6 +18,10 @@ class MessageMailer < ApplicationMailer
       }
     end
 
+    if @message.reply_to.present?
+      headers['In-Reply-To'] = @message.reply_to.message_id
+    end
+
     mail subject: @message.subject, from: @message.from, to: @message.to, cc: @message.cc, bcc: @message.bcc
   end
 end

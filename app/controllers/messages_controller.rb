@@ -13,6 +13,15 @@ class MessagesController < ApplicationController
   # GET /messages/new
   def new
     @message = Message.new
+
+    if params[:reply_to_id].present?
+      reply_to = Message.find(params[:reply_to_id])
+      @message.reply_to = reply_to # we also have to save reference to original Message
+      @message.subject = "Re: #{reply_to.subject}"
+      @message.to = reply_to.from
+      @message.from = reply_to.to
+      @message.cc = reply_to.cc
+    end
   end
 
   def send_email
@@ -48,6 +57,6 @@ class MessagesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def message_params
-      params.require(:message).permit(:subject, :from, :to, :cc, :bcc, :content, attachments: [])
+      params.require(:message).permit(:subject, :from, :to, :cc, :bcc, :content, :reply_to_id, attachments: [])
     end
 end

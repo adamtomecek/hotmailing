@@ -11,6 +11,7 @@ RSpec.describe MessageMailer, type: :mailer do
         cc: 'cc@example.com',
         bcc: 'bcc@example.com',
         content: 'my content',
+        reply_to: create(:message, message_id: '4db58d0dac4ffa7f0431ea8230acfc1e6f42f40d@hey.com'),
       )
     end
 
@@ -22,6 +23,7 @@ RSpec.describe MessageMailer, type: :mailer do
       expect(mail.to).to eq ['test@example.com']
       expect(mail.cc).to eq ['cc@example.com']
       expect(mail.bcc).to eq ['bcc@example.com']
+      expect(mail.header['In-Reply-To']).not_to be_nil
     end
 
     it 'renders the body' do
