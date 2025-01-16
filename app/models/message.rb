@@ -11,6 +11,8 @@ class Message < ApplicationRecord
 
   before_validation :build_or_find_topic, if: -> { topic.blank? }
 
+  scope :latest_first, -> { order(created_at: :desc) }
+
   def build_or_find_topic
     if reply_to.present?
       self.topic = reply_to.topic

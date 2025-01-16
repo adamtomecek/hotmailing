@@ -12,3 +12,13 @@
 
 */
 @import 'actiontext.css';
+
+@layer components {
+  .topic-list {
+    @apply my-2 bg-white rounded-md p-3 shadow
+  }
+
+  .h1-main {
+    @apply text-lg font-bold text-4xl
+  }
+}

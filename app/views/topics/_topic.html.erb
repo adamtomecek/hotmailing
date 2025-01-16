@@ -1,12 +1,20 @@
-<div id="<%= dom_id topic %>">
-  <p class="my-5">
-    <strong class="block font-medium mb-1">Subject:</strong>
-    <%= topic.subject %>
-  </p>
-
-  <% if action_name != "show" %>
-    <%= link_to "Show this topic", topic, class: "rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
-    <%= link_to 'Edit this topic', edit_topic_path(topic), class: "rounded-lg py-3 ml-2 px-5 bg-gray-100 inline-block font-medium" %>
-    <hr class="mt-6">
+<div class="topic-list" id="<%= dom_id(topic) %>">
+  <%= link_to topic do %>
+    <div class="flex justify-between">
+      <p class="title-font text-2xl font-bold"><%= topic.subject %></p>
+      <p class="leading-relaxed text-gray-500 pt-1"><%= topic.messages.last.created_at %></p>
+    </div>
   <% end %>
+  <div class="flex justify-between">
+    <p class="leading-relaxed text-gray-500 pt-1"><%= topic.messages.last.from %></p>
+    <div class="py-1 text-right">
+        <% topic.attachments.each do |attachment| %>
+          <%= link_to rails_blob_url(attachment.blob), download: true, class: "bg-gray-100 inline-flex py-1 px-1 rounded-lg items-center hover:bg-gray-200 border" do %>
+            <span class="leading-none">
+              <span class="title-font font-medium text-xs"><%= attachment.blob.filename %></span>
+            </span>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
 </div>
