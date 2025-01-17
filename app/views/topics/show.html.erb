@@ -1,15 +1,20 @@
 <div class="w-full">
-  <div class="flex justify-between items-center mb-5">
-    <h1 class="h1-main"><%= @topic.subject %></h1>
-    <%= link_to 'Inbox', topics_path, class: "rounded-lg py-3 px-5 bg-blue-600 text-white block font-medium" %>
-  </div>
+  <%= turbo_stream_from @topic %>
+  <%= turbo_frame_tag @topic, target: '_top' do %>
+    <div class="flex justify-between items-center mb-5">
+      <h1 class="h1-main"><%= @topic.subject %></h1>
+      <%= link_to 'Inbox', topics_path, class: "rounded-lg py-3 px-5 bg-blue-600 text-white block font-medium" %>
+    </div>
 
-  <% @topic.messages.latest_first.each do |message| %>
-    <%= render message %>
+    <%= turbo_frame_tag :messages do %>
+      <% @topic.messages.latest_first.each do |message| %>
+        <%= render message %>
+      <% end %>
+    <% end %>
+
+    <div class="inline-block ml-2">
+      <%= button_to 'Destroy this topic', topic_path(@topic), method: :delete, class: "mt-2 rounded-lg py-3 px-5 bg-gray-100 font-medium" %>
+    </div>
+    <%= link_to 'Back to topics', topics_path, class: "ml-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
   <% end %>
-
-  <div class="inline-block ml-2">
-    <%= button_to 'Destroy this topic', topic_path(@topic), method: :delete, class: "mt-2 rounded-lg py-3 px-5 bg-gray-100 font-medium" %>
-  </div>
-  <%= link_to 'Back to topics', topics_path, class: "ml-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
 </div>

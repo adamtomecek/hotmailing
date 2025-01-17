@@ -13,6 +13,10 @@ class Message < ApplicationRecord
 
   scope :latest_first, -> { order(created_at: :desc) }
 
+  after_create_commit -> { broadcast_prepend_to topic }
+  after_update_commit -> { broadcast_replace_to topic }
+  after_destroy_commit -> { broadcast_remove_to topic }
+
   def build_or_find_topic
     if reply_to.present?
       self.topic = reply_to.topic

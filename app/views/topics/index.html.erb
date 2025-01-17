@@ -5,6 +5,9 @@
   </div>
 
   <div id="topics" class="min-w-full">
-    <%= render @topics %>
+    <%= turbo_stream_from :topics %>
+    <%= turbo_frame_tag :topics , target: '_top' do %>
+      <%= render @topics %>
+    <% end %>
   </div>
 </div>
